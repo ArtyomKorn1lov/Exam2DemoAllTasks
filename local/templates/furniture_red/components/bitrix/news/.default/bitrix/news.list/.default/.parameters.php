@@ -22,5 +22,11 @@ $arTemplateParameters = array(
 		"TYPE" => "CHECKBOX",
 		"DEFAULT" => "Y",
 	),
+	"SPECIAL_DATE" => [
+		"PARENT" => "BASE",
+		"NAME" => GetMessage("NEWS_LIST_SPECIAL_DATE"),
+		"TYPE" => "CHECKBOX",
+		"DEFAULT" => "N",
+	]
 );
 ?>
