@@ -14,3 +14,10 @@ $eventManager->addEventHandler(
     "OnEpilog",
     ["lib\\Exam\\EventLogWriter", "onEpilogCheck404"]
 );
+
+/** Регистрация обработчика события OnBeforeEventAdd для обработки события изменения данных письма */
+$eventManager->addEventHandler(
+    "main",
+    "OnBeforeEventAdd",
+    ["lib\\Exam\\EventLogWriter", "onBeforeEventAddChangeMailData"]
+);
