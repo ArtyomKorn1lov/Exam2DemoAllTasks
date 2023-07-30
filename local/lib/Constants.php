@@ -2,6 +2,9 @@
 
 namespace lib;
 
+/**
+ * Глобальные константы
+ */
 class Constants
 {
     /** @var string символьный код ИБ Продукция */
@@ -9,4 +12,7 @@ class Constants
 
     /** @var string наименование события FEEDBACK_FORM */
     public const FEEDBACK_FORM_EVENT_NAME = "FEEDBACK_FORM";
+
+    /** @var string символьный код группы контент-редакторы */
+    public const CONTENT_EDITOR_NAME = "content_editor";
 }

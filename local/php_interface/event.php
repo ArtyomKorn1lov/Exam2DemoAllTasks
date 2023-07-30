@@ -21,3 +21,10 @@ $eventManager->addEventHandler(
     "OnBeforeEventAdd",
     ["lib\\Exam\\EventLogWriter", "onBeforeEventAddChangeMailData"]
 );
+
+/** Регистрация обработчика события OnBeforeEventAdd для обработки события изменения данных письма */
+$eventManager->addEventHandler(
+    "main",
+    "OnBuildGlobalMenu",
+    ["lib\\Exam\\AdminSectionHandler", "onBuildGlobalMenuContentWriter"]
+);
