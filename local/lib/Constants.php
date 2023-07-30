@@ -15,4 +15,7 @@ class Constants
 
     /** @var string символьный код группы контент-редакторы */
     public const CONTENT_EDITOR_NAME = "content_editor";
+
+    /** @var string символьный код ИБ Метатеги */
+    public const IBLOCK_CODE_METATAGS = "metatags";
 }

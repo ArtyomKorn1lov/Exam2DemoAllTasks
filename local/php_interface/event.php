@@ -22,9 +22,16 @@ $eventManager->addEventHandler(
     ["lib\\Exam\\EventLogWriter", "onBeforeEventAddChangeMailData"]
 );
 
-/** Регистрация обработчика события OnBeforeEventAdd для обработки события изменения данных письма */
+/** Регистрация обработчика события OnBuildGlobalMenu для упрощения левого меню административного раздела */
 $eventManager->addEventHandler(
     "main",
     "OnBuildGlobalMenu",
     ["lib\\Exam\\AdminSectionHandler", "onBuildGlobalMenuContentWriter"]
+);
+
+/** Регистрация обработчика события OnBeforeProlog для поиска метаданных по URL страницы */
+$eventManager->addEventHandler(
+    "main",
+    "OnBeforeProlog",
+    ["lib\\Exam\\IBlockHelper", "onPageStartFindMetaTagsByPageURL"]
 );

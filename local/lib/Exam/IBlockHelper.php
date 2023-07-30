@@ -5,12 +5,23 @@ namespace lib\Exam;
 use lib\Constants;
 use CIBlockElement;
 use Bitrix\Iblock\IblockTable;
+use Bitrix\Main\Loader;
 
 /**
  * Вспомогательный класс для работы с ИБ
  */
 class IBlockHelper
 {
+    /**
+     * Получить ID ИБ по коду
+     * @param string $code
+     * @return int
+     */
+    public static function getIblockIdByCode(string $code): int
+    {
+        return IblockTable::getRow(['filter' => ['CODE' => $code]])["ID"];
+    }
+
     /**
      * Получение элемента ИБ по ID внешнего элемента
      * @param int $id
@@ -45,7 +56,7 @@ class IBlockHelper
     public static function onBeforeIBlockProductElementDeactivate(array &$arFields): bool
     {
         global $APPLICATION;
-        $iblockId = IblockTable::getRow(['filter' => ['CODE' => Constants::IBLOCK_CODE_PRODUCTS]])["ID"];
+        $iblockId = self::getIblockIdByCode(Constants::IBLOCK_CODE_PRODUCTS);
         if (!isset($iblockId)) {
             $APPLICATION->throwException("Инфоблока с данным символьным кодом не существует");
             return false;
@@ -73,6 +84,36 @@ class IBlockHelper
             $APPLICATION->throwException("Товар невозможно деактивировать, у него [".$result["SHOW_COUNTER"]."] просмотров");
             return false;
         }
+        return true;
+    }
+
+    /**
+     * Поиск метаданыых по URL страницы и их установка
+     * @return bool
+     */
+    public static function onPageStartFindMetaTagsByPageURL(): bool
+    {
+        if (!Loader::includeModule('iblock')) {
+            return false;
+        }
+        global $APPLICATION;
+        $iblockId = self::getIblockIdByCode(Constants::IBLOCK_CODE_METATAGS);
+        if (!isset($iblockId)) {
+            return false;
+        }
+        $obResult = CIBlockElement::GetList(
+            ["ID" => "DESC", "SORT" => "DESC"],
+            ["IBLOCK_ID" => $iblockId, "NAME" => $APPLICATION->GetCurPage()],
+            false,
+            false,
+            ["NAME", "PROPERTY_PROP_TITLE", "PROPERTY_PROP_DESCRIPTION"],
+        );
+        $arTags = $obResult->Fetch();
+        if (!$arTags) {
+            return false;
+        }
+        $APPLICATION->SetPageProperty("title", $arTags["PROPERTY_PROP_TITLE_VALUE"]);
+        $APPLICATION->SetPageProperty("description", $arTags["PROPERTY_PROP_DESCRIPTION_VALUE"]);
         return true;
     }
 }
