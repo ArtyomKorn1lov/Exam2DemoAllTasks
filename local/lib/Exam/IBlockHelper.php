@@ -6,12 +6,16 @@ use lib\Constants;
 use CIBlockElement;
 use Bitrix\Iblock\IblockTable;
 use Bitrix\Main\Loader;
+use lib\Exam\Traits\SimpleCompManager;
 
 /**
  * Вспомогательный класс для работы с ИБ
  */
 class IBlockHelper
 {
+    /** Использование трейта для работы с компонентом "Каталог товаров" */
+    use SimpleCompManager;
+
     /**
      * Получить ID ИБ по коду
      * @param string $code

@@ -16,7 +16,7 @@ class EventLogWriter
      */
     public static function onEpilogCheck404(): void
     {
-        /*if (defined('ERROR_404') && ERROR_404 == 'Y') {
+        if (defined('ERROR_404') && ERROR_404 == 'Y') {
             global $APPLICATION;
             $APPLICATION->RestartBuffer();
             include $_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/header.php";
@@ -30,7 +30,7 @@ class EventLogWriter
                     "DESCRIPTION" => $APPLICATION->GetCurPage(),
                 ]
             );
-        }*/
+        }
     }
 
     /**

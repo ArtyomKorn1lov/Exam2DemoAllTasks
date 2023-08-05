@@ -18,4 +18,7 @@ class Constants
 
     /** @var string символьный код ИБ Метатеги */
     public const IBLOCK_CODE_METATAGS = "metatags";
+
+    /** @var string пользовательское свойство разделов ИБ продукция для связи с новостями */
+    public const USER_PROPERTY_NEWS_LINK_NAME = "UF_NEWS_LINK";
 }
