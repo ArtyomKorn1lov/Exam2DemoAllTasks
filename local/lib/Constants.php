@@ -21,4 +21,7 @@ class Constants
 
     /** @var string пользовательское свойство разделов ИБ продукция для связи с новостями */
     public const USER_PROPERTY_NEWS_LINK_NAME = "UF_NEWS_LINK";
+
+    /** @var string свойство ИБ продукция для привязки фирм */
+    public const PROPERTY_FIRM_NAME = "FIRM";
 }

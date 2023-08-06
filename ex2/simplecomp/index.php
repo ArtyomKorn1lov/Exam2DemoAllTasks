@@ -6,7 +6,7 @@ $APPLICATION->SetTitle("Простой компонент");
 	".default", 
 	array(
 		"CACHE_TIME" => "36000000",
-		"CACHE_TYPE" => "Y",
+		"CACHE_TYPE" => "A",
 		"IBLOCK_CATALOG_ID" => "2",
 		"IBLOCK_NEWS_ID" => "1",
 		"USER_PROPERTY_CODE" => "UF_NEWS_LINK",

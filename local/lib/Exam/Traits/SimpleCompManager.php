@@ -107,4 +107,63 @@ trait SimpleCompManager
         }
         return $arResult;
     }
+
+    /**
+     * Получить классификаторы из ИБ Фирма
+     * @param int $iblockId
+     * @return array|bool
+     */
+    public static function getProductClassifireForSimpleComp(int $iblockId): array|bool
+    {
+        if ($iblockId <= 0) {
+            return false;
+        }
+        $obItems = CIBlockElement::GetList(
+            ["ID" => "DESC", "SORT" => "DESC"],
+            ["IBLOCK_ID" => $iblockId],
+            false,
+            false,
+            ["NAME"]
+        );
+        $arResult["ITEMS"] = [];
+        $arResult["SECTION_COUNT"] = 0;
+        while ($item = $obItems->Fetch()) {
+            $arResult["ITEMS"][] = $item;
+            $arResult["SECTION_COUNT"]++;
+        }
+        return $arResult;
+    }
+
+    /**
+     * Установка товаров из ИБ Продукция для каждого из классификатор в результирующий список
+     * @param int $iblockId
+     * @param string $propCode
+     * @param array $arResult
+     * @return array|bool
+     */
+    public static function setProductListForSimpleComp(int $iblockId, string $propCode, array $arResult): array|bool
+    {
+        if ($iblockId <= 0) {
+            return false;
+        }
+        if (count($arResult["ITEMS"]) <= 0) {
+            return false;
+        }
+        foreach ($arResult["ITEMS"] as $key => $arItem) {
+            $obItems = CIBlockElement::GetList(
+                ["ID" => "DESC", "SORT" => "DESC"],
+                ["IBLOCK_ID" => $iblockId, "PROPERTY_".$propCode => $arItem["ID"]],
+                false,
+                false,
+                ["NAME", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "PROPERTY_PRICE", "DETAIL_PAGE_URL"]
+            );
+            if (!$obItems) {
+                continue;
+            }
+            while ($item = $obItems->GetNext()) {
+                $arResult["ITEMS"][$key]["PRODUCTS"][] = $item;
+            }
+        }
+        return $arResult;
+    }
 }
