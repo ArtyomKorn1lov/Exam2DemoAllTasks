@@ -24,4 +24,10 @@ class Constants
 
     /** @var string свойство ИБ продукция для привязки фирм */
     public const PROPERTY_FIRM_NAME = "FIRM";
+
+    /** @var string свойство ИБ новости для привязки к пользователям */
+    public const PROPERTY_AUTHOR_NAME = "AUTHOR";
+
+    /** @var string пользовательское свойство для типов авторов к пользователям */
+    public const USER_PROPERTY_AUTHOR_TYPE_NAME = "UF_AUTHOR_TYPE";
 }

@@ -4,7 +4,7 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 ?>
 
-<?php if(count($arResult["ITEMS"]) > 0) { ?>
+<?php if(!empty($arResult["ITEMS"])) { ?>
     <div>
         ---<br><br>
         <b>Каталог:</b>

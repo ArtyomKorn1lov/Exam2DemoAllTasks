@@ -6,6 +6,7 @@ use lib\Constants;
 use CIBlockElement;
 use Bitrix\Iblock\IblockTable;
 use Bitrix\Main\Loader;
+use lib\Exam\Traits\NewsByInterestsManager;
 use lib\Exam\Traits\SimpleCompManager;
 
 /**
@@ -15,6 +16,8 @@ class IBlockHelper
 {
     /** Использование трейта для работы с компонентом "Каталог товаров" */
     use SimpleCompManager;
+    /** Использование трейта для работы с компонентом "Новости по интересам" */
+    use NewsByInterestsManager;
 
     /**
      * Получить ID ИБ по коду
