@@ -141,7 +141,7 @@ trait SimpleCompManager
      * @param array $arResult
      * @return array|bool
      */
-    public static function setProductListForSimpleComp(int $iblockId, string $propCode, array $arResult): array|bool
+    public static function setProductListForSimpleComp(int $iblockId, string $propCode, string $templateDetailUrl, array $arResult): array|bool
     {
         if ($iblockId <= 0) {
             return false;
@@ -151,14 +151,17 @@ trait SimpleCompManager
         }
         foreach ($arResult["ITEMS"] as $key => $arItem) {
             $obItems = CIBlockElement::GetList(
-                ["ID" => "DESC", "SORT" => "DESC"],
+                ["NAME" => "ASC", "SORT" => "ASC"],
                 ["IBLOCK_ID" => $iblockId, "PROPERTY_".$propCode => $arItem["ID"]],
                 false,
                 false,
-                ["NAME", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "PROPERTY_PRICE", "DETAIL_PAGE_URL"]
+                ["IBLOCK_SECTION_ID", "NAME", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "PROPERTY_PRICE", "DETAIL_PAGE_URL"]
             );
             if (!$obItems) {
                 continue;
+            }
+            if (isset($templateDetailUrl)) {
+                $obItems->SetUrlTemplates($templateDetailUrl);
             }
             while ($item = $obItems->GetNext()) {
                 $arResult["ITEMS"][$key]["PRODUCTS"][] = $item;

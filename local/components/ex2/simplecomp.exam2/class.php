@@ -120,6 +120,6 @@ class SimpleComponent2 extends CBitrixComponent
      */
     private function setProductList(array $arResult): array|bool
     {
-        return IBlockHelper::setProductListForSimpleComp($this->arParams["IBLOCK_CATALOG_ID"], $this->arParams["USER_PROPERTY_CODE"], $arResult);
+        return IBlockHelper::setProductListForSimpleComp($this->arParams["IBLOCK_CATALOG_ID"], $this->arParams["USER_PROPERTY_CODE"], $this->arParams["TEMPLATE_DETAIL_URL"], $arResult);
     }
 }

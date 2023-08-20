@@ -15,7 +15,6 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
                     <ul>
                         <?php foreach ($item["PRODUCTS"] as $catalogItem) { ?>
                             <li>
-                                <a href="<?=$catalogItem["DETAIL_PAGE_URL"]?>" alt="<?=$catalogItem["NAME"]?>">
                                 <?php if (strlen($catalogItem["NAME"]) > 0) { ?>
                                     <?=$catalogItem["NAME"]?>
                                 <?php } ?>
@@ -28,7 +27,9 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
                                 <?php if (strlen($catalogItem["NAME"]) > 0) { ?>
                                     - <?=$catalogItem["PROPERTY_ARTNUMBER_VALUE"]?>
                                 <?php } ?>
-                                </a>
+                                <?php if (strlen($catalogItem["DETAIL_PAGE_URL"]) > 0) { ?>
+                                    (<?= $catalogItem["DETAIL_PAGE_URL"] ?>)
+                                <?php } ?>
                             </li>
                         <?php } ?>
                     </ul>
