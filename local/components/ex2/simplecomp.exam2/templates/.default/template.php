@@ -6,8 +6,9 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 <?php if(!empty($arResult["ITEMS"])) { ?>
     <div>
+        <?=GetMessage("SIMPLE_2_FILTER_TITLE")?> <a href="<?=$arResult["URL"]?>">/exam2/ex2-48/?F=Y</a><br>
         ---<br><br>
-        <b>Каталог:</b>
+        <b><?=GetMessage("SIMPLE_2_CATALOG_TITLE")?></b>
         <ul>
             <?php foreach ($arResult["ITEMS"] as $item) { ?>
                 <li>

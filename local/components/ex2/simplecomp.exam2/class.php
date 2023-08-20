@@ -75,8 +75,12 @@ class SimpleComponent2 extends CBitrixComponent
     {
         global $USER;
         global $APPLICATION;
-        if($this->StartResultCache(false, $USER->GetGroups())) {
-            $this->arResult = $this->prepareData();
+        $cFilter = false;
+        if (isset($_REQUEST["F"])) {
+            $cFilter = true;
+        }
+        if($this->StartResultCache(false, [$USER->GetGroups(), $cFilter])) {
+            $this->arResult = $this->prepareData($cFilter);
             $this->SetResultCacheKeys($this->arResult["SECTION_COUNT"]);
             $this->IncludeComponentTemplate();
         }
@@ -87,15 +91,18 @@ class SimpleComponent2 extends CBitrixComponent
      * Получение и обработка данных из ИБ
      * @return array
      */
-    private function prepareData(): array
+    private function prepareData(bool $cFilter): array
     {
+        if ($cFilter) {
+            $this->AbortResultCache();
+        }
         $arResult = $this->getProductClassifire();
         if (!$arResult) {
             $this->AbortResultCache();
             ShowError(GetMessage("SIMPLE_2_IBLOCK_ID_NOT_FOUND"));
             return [];
         }
-        $arResult = $this->setProductList($arResult);
+        $arResult = $this->setProductList($cFilter, $arResult);
         if (!$arResult) {
             $this->AbortResultCache();
             ShowError(GetMessage("SIMPLE_2_IBLOCK_ID_NOT_FOUND"));
@@ -118,8 +125,9 @@ class SimpleComponent2 extends CBitrixComponent
      * @param array $arResult
      * @return array|bool
      */
-    private function setProductList(array $arResult): array|bool
+    private function setProductList(bool $cFilter, array $arResult): array|bool
     {
-        return IBlockHelper::setProductListForSimpleComp($this->arParams["IBLOCK_CATALOG_ID"], $this->arParams["USER_PROPERTY_CODE"], $this->arParams["TEMPLATE_DETAIL_URL"], $arResult);
+        return IBlockHelper::setProductListForSimpleComp($this->arParams["IBLOCK_CATALOG_ID"], $this->arParams["USER_PROPERTY_CODE"],
+            $this->arParams["TEMPLATE_DETAIL_URL"], $cFilter, $arResult);
     }
 }

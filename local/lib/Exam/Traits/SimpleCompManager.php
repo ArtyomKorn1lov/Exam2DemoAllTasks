@@ -141,7 +141,7 @@ trait SimpleCompManager
      * @param array $arResult
      * @return array|bool
      */
-    public static function setProductListForSimpleComp(int $iblockId, string $propCode, string $templateDetailUrl, array $arResult): array|bool
+    public static function setProductListForSimpleComp(int $iblockId, string $propCode, string $templateDetailUrl, bool $cFilter, array $arResult): array|bool
     {
         if ($iblockId <= 0) {
             return false;
@@ -150,9 +150,17 @@ trait SimpleCompManager
             return false;
         }
         foreach ($arResult["ITEMS"] as $key => $arItem) {
+            $arFiler = ["IBLOCK_ID" => $iblockId, "PROPERTY_".$propCode => $arItem["ID"]];
+            if ($cFilter) {
+                $arFiler[] = [
+                    "LOGIC" => "OR",
+                    ["<=PROPERTY_PRICE" => 1700, "PROPERTY_MATERIAL" => "Дерево, ткань"],
+                    ["<PROPERTY_PRICE" => 1500, "PROPERTY_MATERIAL" => "Металл, пластик"],
+                ];
+            }
             $obItems = CIBlockElement::GetList(
                 ["NAME" => "ASC", "SORT" => "ASC"],
-                ["IBLOCK_ID" => $iblockId, "PROPERTY_".$propCode => $arItem["ID"]],
+                $arFiler,
                 false,
                 false,
                 ["IBLOCK_SECTION_ID", "NAME", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "PROPERTY_PRICE", "DETAIL_PAGE_URL"]
