@@ -2,6 +2,7 @@
 
 namespace lib\Exam\Traits;
 
+use CIBlock;
 use CIBlockElement;
 use CIBlockSection;
 
@@ -172,6 +173,20 @@ trait SimpleCompManager
                 $obItems->SetUrlTemplates($templateDetailUrl);
             }
             while ($item = $obItems->GetNext()) {
+                $arButtons = CIBlock::GetPanelButtons(
+                    $iblockId,
+                    $item["ID"],
+                    0,
+                    ["SECTION_BUTTONS" => false, "SESSID" => false]
+                );
+                $item["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
+                $item["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
+                $item["EDIT_LINK_TEXT"] = $arButtons["edit"]["edit_element"]["TEXT"];
+                $item["DELETE_LINK_TEXT"] = $arButtons["edit"]["delete_element"]["TEXT"];
+                if (!(isset($arResult["ADD_LINK"]) && isset($arResult["ADD_LINK_TEXT"]))) {
+                    $arResult["ADD_LINK"] = $arButtons["edit"]["add_element"]["ACTION_URL"];
+                    $arResult["ADD_LINK_TEXT"] = $arButtons["edit"]["add_element"]["TEXT"];
+                }
                 $arResult["ITEMS"][$key]["PRODUCTS"][] = $item;
             }
         }

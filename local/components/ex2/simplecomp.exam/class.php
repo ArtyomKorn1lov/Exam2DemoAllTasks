@@ -76,6 +76,7 @@ class SimpleComponent extends CBitrixComponent
         global $APPLICATION;
         if($this->StartResultCache()) {
             $this->arResult["ITEMS"] = $this->prepateData();
+            $this->arResult["IBLOCK_ID"] = $this->arParams["IBLOCK_CATALOG_ID"];
             $this->arResult["PRODUCT_COUNT"] = $this->arResult["ITEMS"]["PRODUCT_COUNT"];
             unset($this->arResult["ITEMS"]["PRODUCT_COUNT"]);
             $this->SetResultCacheKeys($this->arResult["PRODUCT_COUNT"]);
