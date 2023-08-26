@@ -2,6 +2,7 @@
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 use CBitrixComponent;
+use CIBlockl;
 use Bitrix\Main\Loader;
 use lib\Exam\IBlockHelper;
 use lib\Constants;
@@ -79,12 +80,25 @@ class SimpleComponent2 extends CBitrixComponent
         if (isset($_REQUEST["F"])) {
             $cFilter = true;
         }
+        $this->addComponentAdminSubmenuTitle();
         if($this->StartResultCache(false, [$USER->GetGroups(), $cFilter])) {
             $this->arResult = $this->prepareData($cFilter);
             $this->SetResultCacheKeys($this->arResult["SECTION_COUNT"]);
             $this->IncludeComponentTemplate();
         }
         $APPLICATION->SetTitle(GetMessage("SIMPLE_2_SECTION_COUNT_TITLE").$this->arResult["SECTION_COUNT"]);
+    }
+
+    private function addComponentAdminSubmenuTitle(): void
+    {
+        $arButtons = CIBlock::GetPanelButtons($this->arParams["IBLOCK_CATALOG_ID"]);
+        $this->AddIncludeAreaIcon(
+            [
+                "TITLE" => GetMessage("SIMPLE_2_SUBMENU_TITLE"),
+                "URL" => $arButtons['submenu']['element_list']['ACTION_URL'],
+                "IN_PARAMS_MENU" => true,
+            ]
+        );
     }
 
     /**
