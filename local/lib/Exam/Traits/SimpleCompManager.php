@@ -192,4 +192,38 @@ trait SimpleCompManager
         }
         return $arResult;
     }
+
+    /**
+     * Установка минимальной и максимальной цены в списке товаров
+     * @param array $arResult
+     * @return array|bool
+     */
+    public static function getMinAndMaxPrice(array $arResult): array|bool
+    {
+        if (count($arResult["ITEMS"]) <= 0) {
+            return false;
+        }
+        $arPrice = self::mergeProductArray($arResult);
+        $arResult["MAX_PRICE"] = max($arPrice);
+        $arResult["MIN_PRICE"] = min($arPrice);
+        return $arResult;
+    }
+
+    /**
+     * Создание сприска с ценами товаров
+     * @param array $arResult
+     * @return array
+     */
+    private static function mergeProductArray(array $arResult): array
+    {
+        $arProducts = [];
+        foreach ($arResult["ITEMS"] as $arItem) {
+            $arProducts = array_merge($arProducts, $arItem["PRODUCTS"]);
+        }
+        $arPrice = [];
+        foreach ($arProducts as $arItem) {
+            $arPrice[] = $arItem["PROPERTY_PRICE_VALUE"];
+        }
+        return $arPrice;
+    }
 }

@@ -83,7 +83,7 @@ class SimpleComponent2 extends CBitrixComponent
         $this->addComponentAdminSubmenuTitle();
         if($this->StartResultCache(false, [$USER->GetGroups(), $cFilter])) {
             $this->arResult = $this->prepareData($cFilter);
-            $this->SetResultCacheKeys($this->arResult["SECTION_COUNT"]);
+            $this->SetResultCacheKeys(["SECTION_COUNT", "MAX_PRICE", "MIN_PRICE"]);
             $this->IncludeComponentTemplate();
         }
         $APPLICATION->SetTitle(GetMessage("SIMPLE_2_SECTION_COUNT_TITLE").$this->arResult["SECTION_COUNT"]);
@@ -122,6 +122,7 @@ class SimpleComponent2 extends CBitrixComponent
             ShowError(GetMessage("SIMPLE_2_IBLOCK_ID_NOT_FOUND"));
             return [];
         }
+        $arResult = $this->getMinAndMaxPrice($arResult);
         return $arResult;
     }
 
@@ -143,5 +144,15 @@ class SimpleComponent2 extends CBitrixComponent
     {
         return IBlockHelper::setProductListForSimpleComp($this->arParams["IBLOCK_CATALOG_ID"], $this->arParams["USER_PROPERTY_CODE"],
             $this->arParams["TEMPLATE_DETAIL_URL"], $cFilter, $arResult);
+    }
+
+    /**
+     * Установка минимальной и максимальной цены в списке товаров
+     * @param array $arResult
+     * @return array|bool
+     */
+    private function getMinAndMaxPrice(array $arResult): array|bool
+    {
+        return IBlockHelper::getMinAndMaxPrice($arResult);
     }
 }
