@@ -33,6 +33,11 @@ $arComponentParameters = [
             "/catalog_exam/#SECTION_ID#/#ELEMENT_CODE#",
             "URL_TEMPLATES"
         ),
+        "ELEMENTS_COUNT" => [
+            "PARENT" => "BASE",
+            "NAME" => GetMessage("SIMPLE_2_ELEMENT_COUNT_TITLE"),
+            "TYPE" => "STRING",
+        ],
         "CACHE_TIME" => ["DEFAULT" => 36000000],
     ],
 ];

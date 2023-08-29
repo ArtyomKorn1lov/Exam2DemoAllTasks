@@ -12,7 +12,8 @@ $APPLICATION->SetTitle("Простой компонент 2");
 		"IBLOCK_CLASSIFIRE_ID" => "7",
 		"USER_PROPERTY_CODE" => "FIRM",
 		"COMPONENT_TEMPLATE" => ".default",
-		"TEMPLATE_DETAIL_URL" => "/catalog_exam/#SECTION_ID#/#ELEMENT_CODE#"
+		"TEMPLATE_DETAIL_URL" => "/catalog_exam/#SECTION_ID#/#ELEMENT_CODE#",
+		"ELEMENTS_COUNT" => "2"
 	),
 	false
 );?><br><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

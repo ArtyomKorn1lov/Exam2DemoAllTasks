@@ -114,18 +114,26 @@ trait SimpleCompManager
      * @param int $iblockId
      * @return array|bool
      */
-    public static function getProductClassifireForSimpleComp(int $iblockId): array|bool
+    public static function getProductClassifireForSimpleComp(int $iblockId, int $nTopCount, int $page, string $messPagination): array|bool
     {
         if ($iblockId <= 0) {
             return false;
+        }
+        $arPagination = false;
+        if ($nTopCount > 0) {
+            $arPagination = [
+                "nPageSize" => $nTopCount,
+                "iNumPage" => $page
+            ];
         }
         $obItems = CIBlockElement::GetList(
             ["ID" => "DESC", "SORT" => "DESC"],
             ["IBLOCK_ID" => $iblockId],
             false,
-            false,
+            $arPagination,
             ["NAME"]
         );
+        $arResult["NAV_STRING"] = self::getNavString($obItems, $messPagination);
         $arResult["ITEMS"] = [];
         $arResult["SECTION_COUNT"] = 0;
         while ($item = $obItems->Fetch()) {
@@ -225,5 +233,22 @@ trait SimpleCompManager
             $arPrice[] = $arItem["PROPERTY_PRICE_VALUE"];
         }
         return $arPrice;
+    }
+
+    /**
+     * Получить HTML разметку для пагинации
+     * @param object $rsObject
+     * @return string
+     */
+    private static function getNavString(object $rsObject, string $messPagination): string
+    {
+        /** @var TYPE_NAME $navComponentObject */
+        $arNavString = $rsObject->GetPageNavStringEx(
+            $navComponentObject,
+            $messPagination,
+            "",
+            "Y"
+        );
+        return $arNavString;
     }
 }

@@ -40,5 +40,8 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
                 </li>
             <?php } ?>
         </ul>
+        <?php if (isset($arResult["NAV_STRING"])) { ?>
+            <?=$arResult["NAV_STRING"]?><br />
+        <?php } ?>
     </div>
 <?php } ?>

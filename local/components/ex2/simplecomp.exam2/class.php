@@ -60,6 +60,9 @@ class SimpleComponent2 extends CBitrixComponent
         if (!isset($this->arParams["USER_PROPERTY_CODE"]) || strlen($this->arParams["USER_PROPERTY_CODE"]) <= 0) {
             $this->arParams["USER_PROPERTY_CODE"] = Constants::PROPERTY_FIRM_NAME;
         }
+        if (!isset($this->arParams["ELEMENTS_COUNT"]) || strlen($this->arParams["ELEMENTS_COUNT"]) <= 0) {
+            $this->arParams["ELEMENTS_COUNT"] = 0;
+        }
         if (!isset($this->arParams["CACHE_TYPE"])) {
             $this->arParams["CACHE_TYPE"] = "A";
         }
@@ -80,9 +83,13 @@ class SimpleComponent2 extends CBitrixComponent
         if (isset($_REQUEST["F"])) {
             $cFilter = true;
         }
+        $page = 1;
+        if (isset($_REQUEST["PAGEN_1"])) {
+            $page = (int)htmlspecialchars($_REQUEST["PAGEN_1"]);
+        }
         $this->addComponentAdminSubmenuTitle();
-        if($this->StartResultCache(false, [$USER->GetGroups(), $cFilter])) {
-            $this->arResult = $this->prepareData($cFilter);
+        if($this->StartResultCache(false, [$USER->GetGroups(), $cFilter, $page])) {
+            $this->arResult = $this->prepareData($cFilter, $page);
             $this->SetResultCacheKeys(["SECTION_COUNT", "MAX_PRICE", "MIN_PRICE"]);
             $this->IncludeComponentTemplate();
         }
@@ -105,12 +112,12 @@ class SimpleComponent2 extends CBitrixComponent
      * Получение и обработка данных из ИБ
      * @return array
      */
-    private function prepareData(bool $cFilter): array
+    private function prepareData(bool $cFilter, int $page): array
     {
         if ($cFilter) {
             $this->AbortResultCache();
         }
-        $arResult = $this->getProductClassifire();
+        $arResult = $this->getProductClassifire($page);
         if (!$arResult) {
             $this->AbortResultCache();
             ShowError(GetMessage("SIMPLE_2_IBLOCK_ID_NOT_FOUND"));
@@ -130,9 +137,10 @@ class SimpleComponent2 extends CBitrixComponent
      * Получить классификаторы для ИБ продукция
      * @return array|bool
      */
-    private function getProductClassifire(): array|bool
+    private function getProductClassifire(int $page): array|bool
     {
-        return IBlockHelper::getProductClassifireForSimpleComp($this->arParams["IBLOCK_CLASSIFIRE_ID"]);
+        return IBlockHelper::getProductClassifireForSimpleComp($this->arParams["IBLOCK_CLASSIFIRE_ID"],
+            $this->arParams["ELEMENTS_COUNT"], $page, GetMessage("SIMPLE_2_MESS_PAGINATION"));
     }
 
     /**
