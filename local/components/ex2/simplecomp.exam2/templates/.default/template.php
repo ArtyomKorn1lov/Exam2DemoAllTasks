@@ -3,6 +3,7 @@
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 ?>
 
+<?= time();?>
 <?php if(!empty($arResult["ITEMS"])) { ?>
     <div>
         <?=GetMessage("SIMPLE_2_FILTER_TITLE")?> <a href="<?=$arResult["URL"]?>">/exam2/ex2-48/?F=Y</a><br>

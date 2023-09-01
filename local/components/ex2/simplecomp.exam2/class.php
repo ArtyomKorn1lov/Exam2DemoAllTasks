@@ -79,6 +79,7 @@ class SimpleComponent2 extends CBitrixComponent
     {
         global $USER;
         global $APPLICATION;
+        global $CACHE_MANAGER;
         $cFilter = false;
         if (isset($_REQUEST["F"])) {
             $cFilter = true;
@@ -88,7 +89,8 @@ class SimpleComponent2 extends CBitrixComponent
             $page = (int)htmlspecialchars($_REQUEST["PAGEN_1"]);
         }
         $this->addComponentAdminSubmenuTitle();
-        if($this->StartResultCache(false, [$USER->GetGroups(), $cFilter, $page])) {
+        if($this->StartResultCache(false, [$USER->GetGroups(), $cFilter, $page], "/servicesIblock")) {
+            $CACHE_MANAGER->RegisterTag("iblock_id_3");
             $this->arResult = $this->prepareData($cFilter, $page);
             $this->SetResultCacheKeys(["SECTION_COUNT", "MAX_PRICE", "MIN_PRICE"]);
             $this->IncludeComponentTemplate();
@@ -96,6 +98,10 @@ class SimpleComponent2 extends CBitrixComponent
         $APPLICATION->SetTitle(GetMessage("SIMPLE_2_SECTION_COUNT_TITLE").$this->arResult["SECTION_COUNT"]);
     }
 
+    /**
+     * Добавить вёрстку кнопки ссылающуюся на админку
+     * @return void
+     */
     private function addComponentAdminSubmenuTitle(): void
     {
         $arButtons = CIBlock::GetPanelButtons($this->arParams["IBLOCK_CATALOG_ID"]);
