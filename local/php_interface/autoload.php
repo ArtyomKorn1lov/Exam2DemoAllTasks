@@ -7,4 +7,5 @@ Bitrix\Main\Loader::registerAutoLoadClasses(null, [
     'lib\Exam\AdminSectionHandler' => '/local/lib/Exam/AdminSectionHandler.php',
     'lib\Exam\Traits\SimpleCompManager' => '/local/lib/Exam/Traits/SimpleCompManager.php',
     'lib\Exam\Traits\NewsByInterestsManager' => '/local/lib/Exam/Traits/NewsByInterestsManager.php',
+    'lib\Exam\UserAgents' => '/local/lib/Exam/UserAgents.php',
 ]);

@@ -30,4 +30,10 @@ class Constants
 
     /** @var string пользовательское свойство для типов авторов к пользователям */
     public const USER_PROPERTY_AUTHOR_TYPE_NAME = "UF_AUTHOR_TYPE";
+
+    /** @var string функция, которую выполнят агент */
+    public const CHECK_USER_COUNT_AGENT_NAME = "lib\Exam\UserAgents::CheckUserCount();";
+
+    /** @var string символьный код почтового шаблона Подсчёт пользователей */
+    public const MAIL_TEMPLATE_TYPE_CODE = "USER_COUNT";
 }
