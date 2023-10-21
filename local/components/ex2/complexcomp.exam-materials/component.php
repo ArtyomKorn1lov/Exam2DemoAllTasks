@@ -21,17 +21,22 @@ $arDefaultUrlTemplates404 = array(
 	"sections_top" => "",
 	"section" => "#SECTION_ID#/",
 	"detail" => "#SECTION_ID#/#ELEMENT_ID#/",
+    "exampage" => "exam/new/#PARAM1#/"
 );
 
 $arDefaultVariableAliases404 = array();
 
-$arDefaultVariableAliases = array();
+$arDefaultVariableAliases = array(
+    "exampage" => ["PARAM1"]
+);
 
 $arComponentVariables = array(
 	"SECTION_ID",
 	"SECTION_CODE",
 	"ELEMENT_ID",
 	"ELEMENT_CODE",
+    "PARAM1",
+    "PARAM2"
 );
 
 if($arParams["SEF_MODE"] == "Y")
@@ -109,6 +114,8 @@ else
 		$componentPage = "detail";
 	elseif(isset($arVariables["ELEMENT_CODE"]) && strlen($arVariables["ELEMENT_CODE"]) > 0)
 		$componentPage = "detail";
+    elseif(isset($arVariables["PARAM1"]))
+        $componentPage = "exampage";
 	elseif(isset($arVariables["SECTION_ID"]) && intval($arVariables["SECTION_ID"]) > 0)
 		$componentPage = "section";
 	elseif(isset($arVariables["SECTION_CODE"]) && strlen($arVariables["SECTION_CODE"]) > 0)
