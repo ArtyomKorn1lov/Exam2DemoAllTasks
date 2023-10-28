@@ -36,4 +36,7 @@ class Constants
 
     /** @var string символьный код почтового шаблона Подсчёт пользователей */
     public const MAIL_TEMPLATE_TYPE_CODE = "USER_COUNT";
+
+    /** @var string символьный код ИБ Жалобы на новости */
+    public const IBLOCK_CODE_COMPLAINS = "complaints-about-the-news";
 }

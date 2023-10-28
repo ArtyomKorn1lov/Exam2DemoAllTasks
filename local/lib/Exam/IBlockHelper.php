@@ -123,4 +123,39 @@ class IBlockHelper
         $APPLICATION->SetPageProperty("description", $arTags["PROPERTY_PROP_DESCRIPTION_VALUE"]);
         return true;
     }
+
+    /**
+     * Добавить жалобу в ИБ Жалобы на новости
+     * @param int $requestId
+     * @return int|bool
+     */
+    public static function addUserReport(int $requestId): int|bool
+    {
+        if (!Loader::includeModule('iblock')) {
+            return false;
+        }
+        global $USER;
+        global $APPLICATION;
+        $iblockId = self::getIblockIdByCode(Constants::IBLOCK_CODE_COMPLAINS);
+        if (!isset($iblockId)) {
+            $APPLICATION->throwException("Инфоблока с данным символьным кодом не существует");
+            return false;
+        }
+        $sUser = '';
+        if ($USER->IsAuthorized()) {
+            $sUser = $USER->GetID() . " (" . $USER->GetLogin() . ") " . $USER->GetFullName();
+        } else {
+            $sUser = "Не авторизован";
+        }
+        $iblockEntity = new CIBlockElement();
+        return $iblockEntity->Add([
+            'IBLOCK_ID'       => $iblockId,
+            'NAME'            => 'Новость ' . $requestId,
+            'ACTIVE_FROM'     => ConvertTimeStamp(time(), "FULL"),
+            'PROPERTY_VALUES' => [
+                'USER' => $sUser,
+                'NEW' => $requestId,
+            ],
+        ]);
+    }
 }
