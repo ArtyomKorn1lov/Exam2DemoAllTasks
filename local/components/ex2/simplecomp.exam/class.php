@@ -21,7 +21,6 @@ class SimpleComponent extends CBitrixComponent
             if (!$this->includeModules()) {
                 return;
             }
-            $this->prepareComponentParams();
             $this->completeComponent();
         }
         catch (Exception $exception) {
@@ -37,34 +36,34 @@ class SimpleComponent extends CBitrixComponent
     {
         if(!Loader::includeModule("iblock"))
         {
-            $this->AbortResultCache();
             ShowError(GetMessage("SIMPLE_IBLOCK_MODULE_NOT_FOUND"));
-            return false;
+            throw new Exception(GetMessage("SIMPLE_IBLOCK_MODULE_NOT_FOUND"));
         }
         return true;
     }
 
     /**
      * Подготовка параметров компонента
-     * @return void
+     * @return mixed
      */
-    private function prepareComponentParams(): void
+    public function onPrepareComponentParams($arParams)
     {
-        if (!isset($this->arParams["IBLOCK_NEWS_ID"]) || strlen($this->arParams["IBLOCK_NEWS_ID"]) <= 0) {
-            $this->arParams["IBLOCK_NEWS_ID"] = 0;
+        if (!isset($arParams["IBLOCK_NEWS_ID"]) || strlen($arParams["IBLOCK_NEWS_ID"]) <= 0) {
+            $arParams["IBLOCK_NEWS_ID"] = 0;
         }
-        if (!isset($this->arParams["IBLOCK_CATALOG_ID"]) || strlen($this->arParams["IBLOCK_CATALOG_ID"]) <= 0) {
-            $this->arParams["IBLOCK_CATALOG_ID"] = 0;
+        if (!isset($arParams["IBLOCK_CATALOG_ID"]) || strlen($arParams["IBLOCK_CATALOG_ID"]) <= 0) {
+            $arParams["IBLOCK_CATALOG_ID"] = 0;
         }
-        if (!isset($this->arParams["USER_PROPERTY_CODE"]) || strlen($this->arParams["USER_PROPERTY_CODE"]) <= 0) {
-            $this->arParams["USER_PROPERTY_CODE"] = Constants::USER_PROPERTY_NEWS_LINK_NAME;
+        if (!isset($arParams["USER_PROPERTY_CODE"]) || strlen($arParams["USER_PROPERTY_CODE"]) <= 0) {
+            $arParams["USER_PROPERTY_CODE"] = Constants::USER_PROPERTY_NEWS_LINK_NAME;
         }
-        if (!isset($this->arParams["CACHE_TYPE"])) {
-            $this->arParams["CACHE_TYPE"] = "A";
+        if (!isset($arParams["CACHE_TYPE"])) {
+            $arParams["CACHE_TYPE"] = "A";
         }
-        if (!isset($this->arParams["CACHE_TIME"])) {
-            $this->arParams["CACHE_TIME"] = 36000000;
+        if (!isset($arParams["CACHE_TIME"])) {
+            $arParams["CACHE_TIME"] = 36000000;
         }
+        return $arParams;
     }
 
     /**

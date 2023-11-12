@@ -24,9 +24,13 @@ class IBlockHelper
      * @param string $code
      * @return int
      */
-    public static function getIblockIdByCode(string $code): int
+    public static function getIblockIdByCode(string $code): int|bool
     {
-        return IblockTable::getRow(['filter' => ['CODE' => $code]])["ID"];
+        $iblockId = IblockTable::getRow(['filter' => ['CODE' => $code]])["ID"];
+        if (!isset($iblockId)) {
+            return false;
+        }
+        return $iblockId;
     }
 
     /**
@@ -64,7 +68,7 @@ class IBlockHelper
     {
         global $APPLICATION;
         $iblockId = self::getIblockIdByCode(Constants::IBLOCK_CODE_PRODUCTS);
-        if (!isset($iblockId)) {
+        if (!$iblockId) {
             $APPLICATION->throwException("Инфоблока с данным символьным кодом не существует");
             return false;
         }
@@ -88,7 +92,7 @@ class IBlockHelper
             return false;
         }
         if ($result["SHOW_COUNTER"] > 2 && $arFields["ACTIVE"] === "N") {
-            $APPLICATION->throwException("Товар невозможно деактивировать, у него [".$result["SHOW_COUNTER"]."] просмотров");
+            $APPLICATION->throwException("Товар невозможно деактивировать, у него ".$result["SHOW_COUNTER"]." просмотров");
             return false;
         }
         return true;
@@ -105,7 +109,7 @@ class IBlockHelper
         }
         global $APPLICATION;
         $iblockId = self::getIblockIdByCode(Constants::IBLOCK_CODE_METATAGS);
-        if (!isset($iblockId)) {
+        if (!$iblockId) {
             return false;
         }
         $obResult = CIBlockElement::GetList(
@@ -137,7 +141,7 @@ class IBlockHelper
         global $USER;
         global $APPLICATION;
         $iblockId = self::getIblockIdByCode(Constants::IBLOCK_CODE_COMPLAINS);
-        if (!isset($iblockId)) {
+        if (!$iblockId) {
             $APPLICATION->throwException("Инфоблока с данным символьным кодом не существует");
             return false;
         }

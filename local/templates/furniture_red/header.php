@@ -29,7 +29,7 @@ if ($canonical) { ?>
 		
 	</style>
 	<![endif]-->
-    <meta property="specialdate" content="<?=$APPLICATION->ShowProperty("specialdate");?>" />
+    <meta property="specialdate" content="<?php $APPLICATION->ShowProperty("specialdate"); ?>" />
 	<title><?$APPLICATION->ShowTitle()?></title>
 </head>
 <body>
