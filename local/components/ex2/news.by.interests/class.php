@@ -102,13 +102,13 @@ class NewByInterests extends CBitrixComponent
             return [];
         }
         $authorType = $arAuthor[$this->arParams["USER_PROPERTY_CODE"]];
-        $arResult = $this->getUsers($authorType);
+        $arResult = $this->getUsers($authorType, $userId);
         if (!$arResult) {
             $this->AbortResultCache();
             ShowError(GetMessage("INTERSTS_USER_NOT_FOUND"));
             return [];
         }
-        $arResult = $this->setNewsToResult($arResult);
+        $arResult = $this->setNewsToResult($arResult, $userId);
         if (!$arResult) {
             $this->AbortResultCache();
             ShowError(GetMessage("INTERSTS_IBLOCK_NOT_FOUND"));
@@ -122,9 +122,9 @@ class NewByInterests extends CBitrixComponent
      * @param int $authorType
      * @return array
      */
-    private function getUsers(int $authorType): array|bool
+    private function getUsers(int $authorType, $userId): array|bool
     {
-        return IBlockHelper::getUsers($authorType, $this->arParams["USER_PROPERTY_CODE"]);
+        return IBlockHelper::getUsers($authorType, $this->arParams["USER_PROPERTY_CODE"], $userId);
     }
 
     /**
@@ -132,8 +132,8 @@ class NewByInterests extends CBitrixComponent
      * @param array $arResult
      * @return array
      */
-    private function setNewsToResult(array $arResult): array|bool
+    private function setNewsToResult(array $arResult, int $userId): array|bool
     {
-        return IBlockHelper::setNewsToResult($this->arParams["IBLOCK_NEWS_ID"], $this->arParams["IBLOCK_PROPERTY_CODE"], $arResult);
+        return IBlockHelper::setNewsToResult($this->arParams["IBLOCK_NEWS_ID"], $this->arParams["IBLOCK_PROPERTY_CODE"], $arResult, $userId);
     }
 }

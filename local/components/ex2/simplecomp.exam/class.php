@@ -74,9 +74,10 @@ class SimpleComponent extends CBitrixComponent
     {
         global $APPLICATION;
         if($this->StartResultCache()) {
-            $this->arResult["ITEMS"] = $this->prepateData();
+            $this->arResult["ITEMS"] = $this->prepareData();
             $this->arResult["IBLOCK_ID"] = $this->arParams["IBLOCK_CATALOG_ID"];
             $this->arResult["PRODUCT_COUNT"] = $this->arResult["ITEMS"]["PRODUCT_COUNT"];
+            unset($this->arResult["ITEMS"]["SECTION_IDS"]);
             unset($this->arResult["ITEMS"]["PRODUCT_COUNT"]);
             $this->SetResultCacheKeys($this->arResult["PRODUCT_COUNT"]);
             $this->IncludeComponentTemplate();
@@ -88,7 +89,7 @@ class SimpleComponent extends CBitrixComponent
      * Получение и обработка данных из ИБ
      * @return array
      */
-    private function prepateData(): array
+    private function prepareData(): array
     {
         $arResult = $this->getNews();
         if (!$arResult) {

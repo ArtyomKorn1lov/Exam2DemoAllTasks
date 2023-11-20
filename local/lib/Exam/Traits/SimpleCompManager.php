@@ -72,6 +72,9 @@ trait SimpleCompManager
                 }
             }
         }
+        foreach ($arCatalogSections as $catalogSection) {
+            $arNews["SECTION_IDS"][] = $catalogSection["ID"];
+        }
         return $arNews;
     }
 
@@ -90,21 +93,20 @@ trait SimpleCompManager
             return false;
         }
         $arResult["PRODUCT_COUNT"] = 0;
-        foreach ($arResult as $key => $arItem) {
-            $obItems = CIBlockElement::GetList(
-                ["ID" => "DESC", "SORT" => "DESC"],
-                ["IBLOCK_ID" => $iblockId, "SECTION_ID" => $arItem["SECTIONS"]["IDS"]],
-                false,
-                false,
-                ["NAME", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "PROPERTY_PRICE"]
-            );
-            if (!$obItems) {
-                continue;
+        $obItems = CIBlockElement::GetList(
+            ["ID" => "DESC", "SORT" => "DESC"],
+            ["IBLOCK_ID" => $iblockId, "SECTION_ID" => $arResult["SECTION_IDS"]],
+            false,
+            false,
+            ["IBLOCK_SECTION_ID", "NAME", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "PROPERTY_PRICE"]
+        );
+        while ($item = $obItems->Fetch()) {
+            foreach ($arResult as $key => $arItem) {
+                if (!empty($arItem["SECTIONS"]["IDS"]) && in_array($item["IBLOCK_SECTION_ID"], $arItem["SECTIONS"]["IDS"])) {
+                    $arResult[$key]["CATALOG_ITEMS"][] = $item;
+                }
             }
-            while ($item = $obItems->Fetch()) {
-                $arResult[$key]["CATALOG_ITEMS"][] = $item;
-                $arResult["PRODUCT_COUNT"]++;
-            }
+            $arResult["PRODUCT_COUNT"]++;
         }
         return $arResult;
     }
@@ -138,6 +140,7 @@ trait SimpleCompManager
         $arResult["SECTION_COUNT"] = 0;
         while ($item = $obItems->Fetch()) {
             $arResult["ITEMS"][] = $item;
+            $arResult["PRODUCT_IDS"][] = $item["ID"];
             $arResult["SECTION_COUNT"]++;
         }
         return $arResult;
@@ -158,44 +161,45 @@ trait SimpleCompManager
         if (count($arResult["ITEMS"]) <= 0) {
             return false;
         }
-        foreach ($arResult["ITEMS"] as $key => $arItem) {
-            $arFiler = ["IBLOCK_ID" => $iblockId, "PROPERTY_".$propCode => $arItem["ID"]];
-            if ($cFilter) {
-                $arFiler[] = [
-                    "LOGIC" => "OR",
-                    ["<=PROPERTY_PRICE" => 1700, "PROPERTY_MATERIAL" => "Дерево, ткань"],
-                    ["<PROPERTY_PRICE" => 1500, "PROPERTY_MATERIAL" => "Металл, пластик"],
-                ];
-            }
-            $obItems = CIBlockElement::GetList(
-                ["NAME" => "ASC", "SORT" => "ASC"],
-                $arFiler,
-                false,
-                false,
-                ["IBLOCK_SECTION_ID", "NAME", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "PROPERTY_PRICE", "DETAIL_PAGE_URL"]
+        $arFiler = ["IBLOCK_ID" => $iblockId, "PROPERTY_".$propCode => $arResult["PRODUCT_IDS"]];
+        if ($cFilter) {
+            $arFiler[] = [
+                "LOGIC" => "OR",
+                ["<=PROPERTY_PRICE" => 1700, "PROPERTY_MATERIAL" => "Дерево, ткань"],
+                ["<PROPERTY_PRICE" => 1500, "PROPERTY_MATERIAL" => "Металл, пластик"],
+            ];
+        }
+        $obItems = CIBlockElement::GetList(
+            ["NAME" => "ASC", "SORT" => "ASC"],
+            $arFiler,
+            false,
+            false,
+            ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "NAME", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "PROPERTY_PRICE", "DETAIL_PAGE_URL"]
+        );
+        if (isset($templateDetailUrl)) {
+            $obItems->SetUrlTemplates($templateDetailUrl);
+        }
+        while ($object = $obItems->GetNextElement()) {
+            $item = $object->GetFields();
+            $arButtons = CIBlock::GetPanelButtons(
+                $iblockId,
+                $item["ID"],
+                0,
+                ["SECTION_BUTTONS" => false, "SESSID" => false]
             );
-            if (!$obItems) {
-                continue;
+            $item["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
+            $item["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
+            $item["EDIT_LINK_TEXT"] = $arButtons["edit"]["edit_element"]["TEXT"];
+            $item["DELETE_LINK_TEXT"] = $arButtons["edit"]["delete_element"]["TEXT"];
+            if (!(isset($arResult["ADD_LINK"]) && isset($arResult["ADD_LINK_TEXT"]))) {
+                $arResult["ADD_LINK"] = $arButtons["edit"]["add_element"]["ACTION_URL"];
+                $arResult["ADD_LINK_TEXT"] = $arButtons["edit"]["add_element"]["TEXT"];
             }
-            if (isset($templateDetailUrl)) {
-                $obItems->SetUrlTemplates($templateDetailUrl);
-            }
-            while ($item = $obItems->GetNext()) {
-                $arButtons = CIBlock::GetPanelButtons(
-                    $iblockId,
-                    $item["ID"],
-                    0,
-                    ["SECTION_BUTTONS" => false, "SESSID" => false]
-                );
-                $item["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
-                $item["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
-                $item["EDIT_LINK_TEXT"] = $arButtons["edit"]["edit_element"]["TEXT"];
-                $item["DELETE_LINK_TEXT"] = $arButtons["edit"]["delete_element"]["TEXT"];
-                if (!(isset($arResult["ADD_LINK"]) && isset($arResult["ADD_LINK_TEXT"]))) {
-                    $arResult["ADD_LINK"] = $arButtons["edit"]["add_element"]["ACTION_URL"];
-                    $arResult["ADD_LINK_TEXT"] = $arButtons["edit"]["add_element"]["TEXT"];
+            $item["PROPS"] = $object->GetProperty("FIRM");
+            foreach ($arResult["ITEMS"] as $key => $arItem) {
+                if ($arItem["ID"] >= 0 && !empty($item["PROPS"]["VALUE"]) && in_array($arItem["ID"], $item["PROPS"]["VALUE"])) {
+                    $arResult["ITEMS"][$key]["PRODUCTS"][] = $item;
                 }
-                $arResult["ITEMS"][$key]["PRODUCTS"][] = $item;
             }
         }
         return $arResult;

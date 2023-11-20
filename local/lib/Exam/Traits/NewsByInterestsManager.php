@@ -16,7 +16,7 @@ trait NewsByInterestsManager
      * @param string $userPropertyCode
      * @return array|bool
      */
-    public static function getUsers(int $authorType, string $userPropertyCode): array|bool
+    public static function getUsers(int $authorType, string $userPropertyCode, int $userId): array|bool
     {
         if ($authorType <= 0 || strlen($userPropertyCode) <= 0) {
             return false;
@@ -24,12 +24,13 @@ trait NewsByInterestsManager
         $obItems = CUser::GetList(
             "ID",
             "DESC",
-            [$userPropertyCode => $authorType],
+            [$userPropertyCode => $authorType, "!ID" => $userId],
             ["FIELDS" => ["LOGIN", "ID"]]
         );
         $arResult["ITEMS"] = [];
         while ($item = $obItems->Fetch()) {
-          $arResult["ITEMS"][] = $item;  
+            $arResult["ITEMS"][] = $item;
+            $arResult["IDS"][] = $item["ID"];
         }
         return $arResult;
     }
@@ -41,26 +42,26 @@ trait NewsByInterestsManager
      * @param array $arResult
      * @return array|bool
      */
-    public static function setNewsToResult(int $iblockId, string $iblockPropertyCode, array $arResult): array|bool
+    public static function setNewsToResult(int $iblockId, string $iblockPropertyCode, array $arResult, int $userId): array|bool
     {
         if ($iblockId <= 0 || strlen($iblockPropertyCode) <= 0) {
             return false;
         }
-        $arNews = [];
         $arResult["UNIC_COUNT"] = 0;
-        foreach ($arResult["ITEMS"] as $key => $arItem) {
-            $obItems = CIBlockElement::GetList(
-                ["ID" => "DESC", "SORT" => "DESC"],
-                ["IBLOCK_ID" => $iblockId, "PROPERTY_".$iblockPropertyCode => $arItem["ID"]],
-                false,
-                false,
-                ["NAME", "ACTIVE_FROM"]
-            );
-            while ($item = $obItems->Fetch()) {
-                $arResult["ITEMS"][$key]["NEWS"][] = $item;
-                if (!in_array($item["ID"], $arNews, true)) {
-                    $arNews[] = $item["ID"];
-                    $arResult["UNIC_COUNT"]++;
+        $obItems = CIBlockElement::GetList(
+            ["ID" => "DESC", "SORT" => "DESC"],
+            ["IBLOCK_ID" => $iblockId, "PROPERTY_".$iblockPropertyCode => $arResult["IDS"], "!PROPERTY_".$iblockPropertyCode => $userId],
+            false,
+            false,
+            ["ID", "IBLOCK_ID", "NAME", "ACTIVE_FROM"]
+        );
+        while ($object = $obItems->GetNextElement()) {
+            $item = $object->GetFields();
+            $item["PROPS"] = $object->GetProperty("AUTHOR");
+            $arResult["UNIC_COUNT"]++;
+            foreach ($arResult["ITEMS"] as $key => $arItem) {
+                if ($arItem["ID"] >= 0 && !empty($item["PROPS"]["VALUE"]) && in_array($arItem["ID"], $item["PROPS"]["VALUE"])) {
+                    $arResult["ITEMS"][$key]["NEWS"][] = $item;
                 }
             }
         }
