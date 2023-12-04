@@ -17,7 +17,8 @@ class UserAgents
      */
     public static function CheckUserCount(): string
     {
-        $curDate = date('Y-m-d H:i:s');
+        // Текущая дата и время, вид: 04.12.2023 10:10:10
+        $curDate = ConvertTimeStamp(time(), "FULL");;
         $sLastDate = COption::GetOptionString("main", "last_date_agent_checkUserCount");
         if (!empty($sLastDate)) {
             $arFilter = ["DATE_REGISTER_1" => $sLastDate];
