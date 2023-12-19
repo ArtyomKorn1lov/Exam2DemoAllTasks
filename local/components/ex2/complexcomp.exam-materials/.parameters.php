@@ -98,11 +98,9 @@ $arComponentParameters = array(
 			//добавили новую страницу
 			"exampage" => array(
 					"NAME" => GetMessage("EXAM_PAGE"),
-					"DEFAULT" => "exam/new/#PARAM1#/",
-					"VARIABLES" => ["#PARAM1#"],
+					"DEFAULT" => 'exam/new/#PARAM1#/?PARAM2=#PARAM2#',
+					"VARIABLES" => ["PARAM1", "PARAM2"],
 			),
-			"PARAM1" => Array("NAME" => GetMessage("PARAM1")),
-			"PARAM2" => Array("NAME" => GetMessage("PARAM2")),
 				
 		),
 		"IBLOCK_TYPE" => array(

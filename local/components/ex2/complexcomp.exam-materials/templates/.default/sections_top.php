@@ -14,18 +14,8 @@ $this->setFrameMode(true);
 ?>
 <?
 //ссылка на страницу станицу exampage
-$param1 = "";
-$param2 = "";
-$url = "";
-if ($arParams["SEF_MODE"] === "Y") {
-    $param1 = $arParams["SEF_URL_TEMPLATES"]["PARAM1"];
-    $param2 = $arParams["SEF_URL_TEMPLATES"]["PARAM2"];
-    $url = $arParams["SEF_FOLDER"] . str_replace("#PARAM1#", $param1, $arParams["SEF_URL_TEMPLATES"]["exampage"]) . "?PARAM2=$param2";
-} else {
-    $param1 = $arParams["VARIABLE_ALIASES"]["PARAM1"];
-    $param2 = $arParams["VARIABLE_ALIASES"]["PARAM2"];
-    $url = $APPLICATION->GetCurPage() . "?PARAM1=$param1&PARAM2=$param2";
-}
+$sTemplate = $arResult['URL_TEMPLATES']['exampage'];
+$url = $arResult['FOLDER'] . str_replace(['#PARAM1#', '#PARAM2#'], ['123', '456'], $sTemplate);
 ?>
 <?=GetMessage("EXAM_TEXT_LINK_CP_PHOTO")?> <a href="<?=$url?>"><?=$url?></a>
 

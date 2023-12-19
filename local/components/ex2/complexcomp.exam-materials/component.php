@@ -21,14 +21,12 @@ $arDefaultUrlTemplates404 = array(
 	"sections_top" => "",
 	"section" => "#SECTION_ID#/",
 	"detail" => "#SECTION_ID#/#ELEMENT_ID#/",
-    "exampage" => "exam/new/#PARAM1#/"
+    "exampage" => "exam/new/#PARAM1#/?PARAM2=#PARAM2#"
 );
 
 $arDefaultVariableAliases404 = array();
 
-$arDefaultVariableAliases = array(
-    "exampage" => ["PARAM1"]
-);
+$arDefaultVariableAliases = array();
 
 $arComponentVariables = array(
 	"SECTION_ID",
@@ -128,6 +126,7 @@ else
 		"URL_TEMPLATES" => Array(
 			"section" => htmlspecialcharsbx($APPLICATION->GetCurPage())."?".$arVariableAliases["SECTION_ID"]."=#SECTION_ID#",
 			"detail" => htmlspecialcharsbx($APPLICATION->GetCurPage())."?".$arVariableAliases["SECTION_ID"]."=#SECTION_ID#"."&".$arVariableAliases["ELEMENT_ID"]."=#ELEMENT_ID#",
+            "exampage" => htmlspecialcharsbx($APPLICATION->GetCurPage())."?".$arVariableAliases["PARAM1"]."=#PARAM1#" . '&' . $arVariableAliases["PARAM2"]."=#PARAM2#",
 		),
 		"VARIABLES" => $arVariables,
 		"ALIASES" => $arVariableAliases
